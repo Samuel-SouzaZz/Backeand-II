@@ -4,7 +4,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch \"src/\" --exec \"ts-node src/index.ts\" -e ts",
+    "start": "nodemon --watch src --exec \"npx tsx src/index.ts\" -e ts",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -17,6 +19,8 @@
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@eslint/json": "^0.13.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.4.0",
     "eslint": "^9.35.0",
     "globals": "^16.4.0",
     "jiti": "^2.5.1",
@@ -28,12 +32,14 @@
   "dependencies": {
     "@fastify/cors": "^11.1.0",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.4.0",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.2",
     "elint": "^1.0.0",
     "eslint-config-prettier": "^10.1.8",
     "express": "^5.1.0",
     "fastify": "^5.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.1",
     "prettier": "^3.6.2",
     "tsx": "^4.20.5"
   }
