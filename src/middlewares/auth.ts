@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
+const JWT_SECRET = process.env['JWT_SECRET'] || 'dev-secret-change-me';
 
 export interface AuthRequest extends express.Request {
   user?: {

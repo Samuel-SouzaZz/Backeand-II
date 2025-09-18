@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/backend-ii';
+const MONGO_URI = process.env['MONGO_URI'] || 'mongodb://localhost:27017/backend-ii';
 
 console.log('Tentando conectar com MongoDB...');
 console.log('URI:', MONGO_URI);

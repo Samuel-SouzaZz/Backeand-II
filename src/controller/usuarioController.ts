@@ -63,7 +63,7 @@ export class UsuarioController {
   }
 
   // Buscar todos os usuários
-  static async buscarUsuarios(req: express.Request, res: express.Response): Promise<void> {
+  static async buscarUsuarios(_req: express.Request, res: express.Response): Promise<void> {
     try {
       const usuarios = await UsuarioService.buscarTodosUsuarios();
       res.status(200).json({
@@ -82,7 +82,7 @@ export class UsuarioController {
   // Buscar usuário por ID
   static async buscarUsuarioPorId(req: express.Request, res: express.Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as { id: string };
       
       const usuario = await UsuarioService.buscarUsuarioPorId(id);
       
@@ -108,7 +108,7 @@ export class UsuarioController {
   // Atualizar usuário
   static async atualizarUsuario(req: AuthRequest, res: express.Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as { id: string };
       const { nome, email, senha } = req.body;
 
       // Verificar se o usuário está tentando atualizar seus próprios dados
@@ -167,7 +167,7 @@ export class UsuarioController {
   // Deletar usuário (soft delete)
   static async deletarUsuario(req: express.Request, res: express.Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as { id: string };
       console.log('Tentando deletar usuário com ID:', id);
 
       // Validar se o ID é um ObjectId válido
@@ -203,7 +203,9 @@ export class UsuarioController {
       }
     } catch (error) {
       console.error('Erro ao deletar usuário:', error);
-      console.error('Stack trace:', error.stack);
+      if (error instanceof Error) {
+        console.error('Stack trace:', error.stack);
+      }
       res.status(500).json({ 
         erro: 'Erro interno do servidor' 
       });
@@ -213,7 +215,7 @@ export class UsuarioController {
   // Deletar usuário permanentemente (hard delete)
   static async deletarUsuarioPermanentemente(req: express.Request, res: express.Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as { id: string };
       console.log('Tentando deletar permanentemente usuário com ID:', id);
 
       // Validar se o ID é um ObjectId válido
@@ -250,7 +252,9 @@ export class UsuarioController {
       }
     } catch (error) {
       console.error('Erro ao deletar usuário permanentemente:', error);
-      console.error('Stack trace:', error.stack);
+      if (error instanceof Error) {
+        console.error('Stack trace:', error.stack);
+      }
       res.status(500).json({ 
         erro: 'Erro interno do servidor' 
       });
@@ -260,7 +264,7 @@ export class UsuarioController {
   // ===== MÉTODOS ADMINISTRATIVOS =====
 
   // Listar todos os usuários (incluindo deletados) - apenas admin
-  static async listarTodosUsuariosAdmin(req: AuthRequest, res: express.Response): Promise<void> {
+  static async listarTodosUsuariosAdmin(_req: AuthRequest, res: express.Response): Promise<void> {
     try {
       const usuarios = await UsuarioService.buscarTodosUsuariosIncluindoDeletados();
       res.status(200).json({
@@ -279,7 +283,7 @@ export class UsuarioController {
   // Reativar usuário deletado - apenas admin
   static async reativarUsuario(req: AuthRequest, res: express.Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as { id: string };
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(400).json({
@@ -324,7 +328,7 @@ export class UsuarioController {
   }
 
   // Obter estatísticas de usuários - apenas admin
-  static async obterEstatisticasUsuarios(req: AuthRequest, res: express.Response): Promise<void> {
+  static async obterEstatisticasUsuarios(_req: AuthRequest, res: express.Response): Promise<void> {
     try {
       const estatisticas = await UsuarioService.obterEstatisticasUsuarios();
       res.status(200).json({

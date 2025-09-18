@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { UsuarioService } from '../services/usuarioService.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
+const JWT_SECRET: string = process.env['JWT_SECRET'] ?? 'dev-secret-change-me';
+const JWT_EXPIRES_IN: string | number = process.env['JWT_EXPIRES_IN'] ?? '1d';
 
 export class AuthController {
   static async login(req: express.Request, res: express.Response): Promise<void> {
@@ -34,7 +34,10 @@ export class AuthController {
         nome: (usuario as any).nome
       };
 
-      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+      const signOptions: jwt.SignOptions = {};
+      // eslint off: set only when provided (avoids exactOptionalPropertyTypes issue)
+      (signOptions as any).expiresIn = JWT_EXPIRES_IN as any;
+      const token = jwt.sign(payload, JWT_SECRET, signOptions);
 
       res.status(200).json({
         mensagem: 'Login realizado com sucesso',

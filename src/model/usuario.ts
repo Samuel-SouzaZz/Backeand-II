@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const UsuarioSchema = new Schema({
@@ -44,44 +44,44 @@ const UsuarioSchema = new Schema({
 }, {
     timestamps: true,
     toJSON: {
-        transform: (_doc, ret) => {
-            delete ret.senha;
+        transform: (_doc, ret: any) => {
+            if (ret && typeof ret === 'object' && 'senha' in ret) {
+                delete ret.senha;
+            }
             return ret;
         }
     },
     toObject: {
-        transform: (_doc, ret) => {
-            delete ret.senha;
+        transform: (_doc, ret: any) => {
+            if (ret && typeof ret === 'object' && 'senha' in ret) {
+                delete ret.senha;
+            }
             return ret;
         }
     }
 });
 
 // Atualizar dataAtualizacao antes de salvar
-UsuarioSchema.pre('save', function(next) {
+UsuarioSchema.pre('save', function(this: any, next) {
     this.dataAtualizacao = new Date();
     // Hash da senha se modificada
-    // @ts-ignore
-    if (this.isModified && (this as any).isModified('senha')) {
-        const doc = this as any;
+    if (typeof this.isModified === 'function' && this.isModified('senha')) {
         const salt = bcrypt.genSaltSync(10);
-        doc.senha = bcrypt.hashSync(doc.senha, salt);
+        this.senha = bcrypt.hashSync(this.senha, salt);
     }
     next();
 });
 
 // Hash ao atualizar via findOneAndUpdate
-UsuarioSchema.pre('findOneAndUpdate', function(next) {
-    // @ts-ignore
-    const update: any = this.getUpdate();
+UsuarioSchema.pre('findOneAndUpdate', function(this: any, next) {
+    const update = this.getUpdate() as any;
     if (update && update.senha) {
         const salt = bcrypt.genSaltSync(10);
         update.senha = bcrypt.hashSync(update.senha, salt);
-        this.setUpdate(update);
     }
     // Atualiza dataAtualizacao
     this.setUpdate({
-        ...(this.getUpdate() as any),
+        ...update,
         dataAtualizacao: new Date()
     });
     next();
