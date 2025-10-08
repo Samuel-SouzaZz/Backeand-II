@@ -1,6 +1,6 @@
 import express from "express";
 import 'dotenv/config';
-import connectDB from './config/database.js';
+import connectDB from './config/mongo.js';
 import usuarioRoutes from './routers/usuarioRoutes.js';
 import authRoutes from './routers/authRoutes.js';
 import atividadeRoutes from './routers/atividadeRoutes.js';
